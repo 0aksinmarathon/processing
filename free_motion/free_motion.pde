@@ -62,7 +62,7 @@ class Rec {
    r4 = random(100);
  }
 }
-int num = 1000;
+int num = 500;
 Rec[] r = new Rec[num]; 
 float a = random(800);
 float arg_wid = 10;
@@ -70,7 +70,7 @@ float arg_wid = 10;
 
 void setup(){
   size(500, 500);
-  noStroke();
+  //noStroke();
  
   for (int i = 0; i < num; i+=1){
     r[i] = new Rec(arg_wid);
