@@ -4,38 +4,48 @@ ArrayList<Particle> plist;
 int max_num = 1000;
 float[] prev_speed = new float[max_num];
 int count = 0;
-float gravity = 0.1;
+int screen_cont = 0;
+float gravity = 0.5;
 float y_friction_bounce = 0.8;
 float xz_friction_bounce = 0.95;
-float y_friction_limit = 0.3;
+float y_friction_limit = 0.5;
 float xz_friction_limit = 0.0001;
 float xz_friction_ground = 0.99;
 
 boolean first_count_flag = true;
 void setup(){
   
-size(900, 900, OPENGL);
-plist = new ArrayList<Particle>();
-sphereDetail(10);
-noStroke();
-
-float fov = radians(120);
-
-perspective(fov, float(width)/float(height), 100.0, 1000.0);
+  size(800, 800, OPENGL);
+  plist = new ArrayList<Particle>();
+  sphereDetail(10);
+  noStroke();
+  
+  float fov = radians(120);
+  perspective(fov, float(width)/float(height), 100.0, 1000.0);
 
 }
 
  void draw() {
-   rotateX(frameCount*0.1);
-   camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
-   background(0);
+   //camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+   background(255);
    lights();
    fill(255);
+   if (keyCode == UP){
+     screen_cont--;
+     translate(0,0, screen_cont*1.5);
+   }
+   if (keyCode == DOWN){
+     screen_cont++;
+     translate(0,0, screen_cont*1.5);
+   }
+   if (keyCode == RIGHT){
+      translate(0,0, screen_cont*1.5);
+   }
    float init_speed_x = mouseX - pmouseX;
    float init_speed_y = mouseY - pmouseY;
    Particle p = new Particle(init_speed_x, init_speed_y);
    if (mousePressed){
-    background(0);
+    
      if (count >= max_num){
        count = 0;
        first_count_flag = false;
@@ -54,7 +64,7 @@ perspective(fov, float(width)/float(height), 100.0, 1000.0);
        if (plist.get(i).x < 0 || plist.get(i).x > width){
          plist.get(i).bounce("x");
        }
-       if (plist.get(i).z > width || plist.get(i).z < 0){
+       if (plist.get(i).z > width/2 || plist.get(i).z < 0){
          plist.get(i).bounce("z");
        }
        if (plist.get(i).y > height){
@@ -95,8 +105,8 @@ class Particle{
     x = mouseX;
     y = mouseY;
     z = 0;
-    xspeed = init_speed_x;
-    yspeed = init_speed_y;
+    xspeed = init_speed_x+(random(10)-5);
+    yspeed = init_speed_y+(random(10)-5);
     zspeed = random(10);
     r = int(random(255));
     g = int(random(255));
