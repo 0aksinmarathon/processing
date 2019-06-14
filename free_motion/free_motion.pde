@@ -70,7 +70,7 @@ float arg_wid = 10;
 
 void setup(){
   size(500, 500);
-  //noStroke();
+  noStroke();
  
   for (int i = 0; i < num; i+=1){
     r[i] = new Rec(arg_wid);
@@ -100,5 +100,5 @@ void draw(){
       r[i].redo();
     }
   }
-  
+  saveFrame("frames/######.png");
 }

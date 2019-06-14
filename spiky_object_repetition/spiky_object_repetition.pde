@@ -1,14 +1,18 @@
 /*
-fun to see it shifted to near side from front 
+fun to see it shifted to near side from front angle
 */
 
 import processing.opengl.*;
 
-int num = 100;
-float rotation_number = 5;
-int repetition = 2;
+int num = 10;
+float rotation_number = 10;
+int repetition = 15;
 int [][][] color_list = new int[repetition][num][4];
 int count = 0;
+int brightness = 0;
+int alpha = 50; 
+// with low alpha, seems like lights are tunred off
+// low alpha + o bakground update
 void setup(){
   
   size(800, 800, OPENGL);
@@ -25,10 +29,10 @@ void setup(){
    for (float i = 0; i < num; i++){
      for (float l = 0; l < repetition; l++){
      
-       color_list[int(l)][int(i)][0] = 128 + int(random(128));
-       color_list[int(l)][int(i)][1] = 128 + int(random(128));
-       color_list[int(l)][int(i)][2] = 128 + int(random(128));
-       color_list[int(l)][int(i)][3] = int(random(50));
+       color_list[int(l)][int(i)][0] = brightness + int(random(255-brightness));
+       color_list[int(l)][int(i)][1] = brightness + int(random(255-brightness));
+       color_list[int(l)][int(i)][2] = brightness + int(random(255-brightness));
+       color_list[int(l)][int(i)][3] = int(alpha);
      }
      for (int j = 0; j < 1; j++){
      
@@ -51,45 +55,45 @@ void setup(){
   }
    
 }
-void mouseReleased(){
-     count--;
-     translate(0,0, count*1.5);
-   }
+
 
 
  void draw() {
   
+   if (key == 'b'){
    camera(mouseX, mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
-   background(0);
+   } else {
+   camera(width/2, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+   }
+   background(0); 
    translate(width/2, height/2);
    rotateZ(frameCount*0.01);
-
+    
    screen_control();
    
-      for (int l = 0; l < repetition; l++){
-       translate(0,0,-width/4);
-       for (int i = 0; i < num; i++){
-         
-         pushMatrix();
-         for (int j = 0; j < rotation_number; j++){
-           
-           rotateX(radians(90*j/rotation_number));
-           pushMatrix();
-           for (int k = 0; k < rotation_number; k++){
-              rotateZ(radians(90*k/rotation_number));
-              stroke(color_list[l][i][0], color_list[l][i][1],
-              color_list[l][i][2],color_list[l][i][3]);
+for (int l = 0; l < repetition; l++){
+ translate(0,0,-width/4);
  
-              line_draw(i);
-         
-       }
-       popMatrix(); 
+   pushMatrix();
+   for (int j = 0; j <= rotation_number; j++){
+     rotateX(radians(90*j/rotation_number));
+     pushMatrix();
+     for (int k = 0; k <= rotation_number; k++){
+        rotateY(radians(90*k/rotation_number));
+        for (int i = 0; i < num; i++){
+        stroke(color_list[l][i][0], color_list[l][i][1],
+        color_list[l][i][2],color_list[l][i][3]);
+ 
+        line_draw(i);
      }
+     }
+     popMatrix(); 
+   }
    popMatrix();
-   }  
-  }
+ 
+}
        
-   
+   //saveFrame("frames/######.png");
  }
 
 void line_draw(float i){
@@ -107,6 +111,7 @@ void line_draw(float i){
    line((width/2)*((i-num)/num), 0, 0, 0, 0, (-i/num)*height/2 ) ;
    line((width/2)*((num-i)/num), 0, 0, 0, 0, (i/num)*height/2 ) ;
    line((width/2)*((num-i)/num), 0, 0, 0, 0, (-i/num)*height/2 ) ;
+   
 }
 
 
@@ -131,5 +136,7 @@ void screen_control(){
    if (key == 'a'){
      translate(0,0, count*1.5);
    } 
-}
+   
+   
+}  
     
